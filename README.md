@@ -38,7 +38,7 @@ This joint synthetic data generation and prompt optimization approach outperform
 [Intent-based Prompt Calibration: Enhancing prompt optimization with synthetic boundary cases](https://arxiv.org/abs/2402.03099) by E. Levi et al. (2024).
 
 
-**Using GPT-4 Turbo, this optimization typically completes in just a few minutes at a cost of under $1.** To manage costs associated with GPT-4 LLM's token usage, the framework enables users to set a budget limit for optimization, in USD or token count, configured as illustrated [here](docs/examples.md#steps-to-run-example).
+
 
 ## Demo
 
