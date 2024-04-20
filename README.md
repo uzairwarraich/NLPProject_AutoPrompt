@@ -131,26 +131,7 @@ python run_pipeline.py \
     --task_description "Assistant is an expert classifier that will classify a movie review, and let the user know if it contains a spoiler for the reviewed movie or not." \
     --num_steps 30
 ```
-You can track the optimization progress using the [W&B](https://wandb.ai/site) dashboard, with setup instructions available  [here](docs/installation.md#monitoring-weights-and-biases-setup). 
 
-
-If you are using pipenv, be sure to activate the environment:
-``` bash
-pipenv shell
-python run_pipeline.py  
-```
-or alternatively prefix your command with `pipenv run`:
-```bash
-pipenv run python run_pipeline.py 
-```
-
-#### Generation pipeline
-To run the generation pipeline, use the following example command:
-```bash
-python run_generation_pipeline.py \
-    --prompt "Write a good and comprehensive movie review about a specific movie." \
-    --task_description "Assistant is a large language model that is tasked with writing movie reviews."
-```
 
 
 
