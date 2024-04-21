@@ -6,7 +6,7 @@
         <img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg"></a>
 </p>
 
-# 📝 AutoPrompt
+# 📝 Introduction- AutoPrompt
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -45,8 +45,39 @@ The optimization process can be extended to content generation tasks by first de
 This joint synthetic data generation and prompt optimization approach outperform traditional methods while requiring minimal data and iterations. Learn more in our paper
 [Intent-based Prompt Calibration: Enhancing prompt optimization with synthetic boundary cases](https://arxiv.org/abs/2402.03099) by E. Levi et al. (2024).
 
+## Solution
+
+The method discussed above addresses the limitations of previous approaches by introducing a system that iteratively generates challenging boundary cases and refines prompts based on user feedback and synthetic examples. This system does not require extensive datasets or direct access to the model's internals, making it adaptable and efficient for real-world applications. By focusing on synthetic data generation and iterative calibration, it also minimizes the need for large, expensive benchmarks, thereby enhancing accessibility and reducing optimization costs.
+
+Background
+| Reference |Explanation |  Dataset/Input |Weakness
+| --- | --- | --- | --- |
+| Pi Liang et al. [1] | Task-specific Embedding (Continuous and Discrete)	| E2E , WebNLG, DART| Requires direct access to the LLM, making it less feasible for proprietary models with restricted access.
+| M.Deng et al. [2] | Reinforcement Learning	| Yelp sentiment transfer dataset | 	Depends on access to generated tokens' probabilities or a large dataset, which can be resource-intensive and impractical in real-world scenarios.
+| R.Pryzant et al. [3] | LLMs for Prompt Optimization		| Yelp Polarity| 	Still requires robust benchmarks to evaluate and compare prompts effectively, which may not always be available or feasible to construct..
+| Elad Levi et al. [4] | Optimizing prompts through iterative calibration based on user intent and synthetic data		| IMDB review dataset | 	Covered in the Future work section
 
 
+## Methodology
+Initial Prompt and Task Description: The process begins with the user providing an initial prompt and a task description. Optionally, the user can also supply a few examples in a few-shot setting, which helps the system understand the context and requirements better.
+
+Sample Generator: Using the initial data, the sample generator creates challenging and diverse boundary cases for the task. This is done to test the robustness of the current prompt and to identify any ambiguities or inaccuracies in prompt interpretation. The generator leverages a meta-prompt, which evolves over iterations based on the history of previous prompts and their performance.
+
+Evaluator: Once the synthetic samples are generated, the evaluator assesses the current prompt's effectiveness on this generated dataset. This evaluation typically involves analyzing the prompt's accuracy using a confusion matrix and identifying misclassifications. This step is crucial for understanding the strengths and weaknesses of the current prompt.
+
+Analyzer: This component receives the results from the evaluator, including prompt scores and detailed error analysis. It synthesizes this information into a comprehensive analysis summary, highlighting major failure cases and suggesting areas for prompt refinement.
+
+Prompt Generator: With the analysis and historical performance data in hand, the prompt generator then suggests a new prompt. This prompt is designed to address the deficiencies identified in the previous iteration, with the aim of achieving a higher score in subsequent evaluations.
+
+Iteration and Optimization: The calibration optimization process is iterative. It repeats the cycle of generating samples, evaluating the prompt, analyzing performance, and generating a new prompt. This loop continues until there is no significant improvement in prompt performance or a maximum number of iterations is reached.
+
+
+## Implementation
+Implementation code of this paper requries access to openAI API key as well as a docker instance of Argilla created either in huggingface space or locally. For that reason I cannot run the code in the google colab instance without having a colab Pro subscription which would give me access to the VM command line.
+
+The github repo(git clone https://github.com/uzairwarraich/NLPProject_AutoPrompt.git) contains all the code and instructions of how to run the code. NOTE: Easier to run the code locally or in a VM, since for annotation Argilla is used, and for Argilla service web browser is required.
+
+<img width="1037" alt="Screenshot 2024-04-19 at 3 00 46 PM" src="https://github.com/uzairwarraich/NLPProject_AutoPrompt/assets/77300361/6e84b60f-dfec-439d-bacb-9b736ea5483a">
 
 ## Demo
 
@@ -70,17 +101,21 @@ The proposed method outperformed other methods such as the OPRO[5] and PE[6].The
 Future work could be done to refine the meta-prompts themselves. This involves improving how the meta-prompts are generated and used within the system to make them even more effective at guiding the prompt optimization process. All multimodality could be introduced to help the model generate better prompts with help images and audio.
 
 In Conclusion, the paper offers valuable learnings about improving the efficiency and effectiveness of Large Language Models (LLMs) through refined prompt engineering. The most important part according to me was the use of synthetic data to generate boundary cases, which aids in iteratively refining prompts to better align with user intentions, thereby addressing the high sensitivity of LLMs to prompt variations. The IPC method showcases a modular and flexible system architecture, allowing for easy adaptation across different tasks and settings, including multi-modality and in-context learning. Additionally, the paper highlights the benefits of minimizing human annotation efforts by relying on synthetic data for prompt calibration, demonstrating significant improvements in model performance with fewer data requirements. These insights underscore the potential of IPC to enhance the practical utility of LLMs in diverse real-world applications, particularly in scenarios with limited data availability or specific performance criteria.
-## 📖 Documentation
- - [How to install](docs/installation.md) (Setup instructions)
- - [Prompt optimization examples](docs/examples.md) (Use cases: movie review classification, generation, and chat moderation)
- - [How it works](docs/how-it-works.md) (Explanation of pipelines)
- - [Architecture guide](docs/architecture.md) (Overview of main components)
 
-## Features
-- 📝 Boosts prompt quality with a minimal amount of data and annotation steps.
-- 🛬 Designed for production use cases like moderation, multi-label classification, and content generation.
-- ⚙️ Enables seamless migrating of prompts across model versions or LLM providers.
-- 🎓 Supports prompt squeezing. Combine multiple rules into a single efficient prompt.
+## References
+[1]: X. L. Li and P. Liang. Prefix-tuning: Optimizing continuous prompts for generation. In C. Zong, F. Xia, W. Li, and R. Navigli, editors, Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers), pages 4582–4597, Online, Aug. 2021. Association for Computational Linguistics.
+
+[2]: M. Deng, J. Wang, C. Hsieh, Y. Wang, H. Guo, T. Shu, M. Song, E. P. Xing, and Z. Hu. Rlprompt: Optimizing discrete text prompts with reinforcement learning. In Y. Goldberg, Z. Kozareva, and Y. Zhang, editors, Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, EMNLP 2022, Abu Dhabi, United Arab Emirates, December 7-11, 2022, pages 3369–3391. Association for Computational Linguistics, 2022.
+
+[3]: R. Pryzant, D. Iter, J. Li, Y. Lee, C. Zhu, and M. Zeng. Automatic prompt optimization with “gradient descent” and beam search. In H. Bouamor, J. Pino, and K. Bali, editors, Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, pages 7957–7968, Singapore, Dec. 2023. Association for Computational Linguistics.
+
+[4]: Elad Levi and Eli Brosh and Matan Friedmann . Intent-based Prompt Calibration: Enhancing prompt optimization with synthetic boundary cases,arXiv:2402.03099, 5 Feb 2024
+
+[5]: C. Yang, X. Wang, Y. Lu, H. Liu, Q. V. Le, D. Zhou, and X. Chen. Large language models as optimizers. CoRR, abs/2309.03409, 2023.
+
+[6]: Q. Ye, M. Axmed, R. Pryzant, and F. Khani. Prompt engineering a prompt engineer, 2023.
+
+[7]:D. Vila-Suero and F. Aranda. Argilla - open-source framework for data-centric nlp, 2023. cff-version: 1.2.0, message: "If you use this software, please cite it as below.", date-released: 2023-01-12.
 
 
 ## QuickStart
